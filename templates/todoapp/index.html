@@ -1,0 +1,35 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+  <title>ToDo List</title>
+  <link rel="stylesheet" type="text/css" href="{% static 'todolist/css/style.css' %}">
+</head>
+<body>
+  <div class="container">
+    <h1>ToDo List</h1>
+    <form id="add-form" method="POST" action="{% url 'add' %}">
+      {% csrf_token %}
+      <input type="text" class="form-control" name="title" placeholder="Add item..." required/>
+      <button type="submit" class="btn btn-primary">Add</button>
+    </form>
+    <ul class="todo-list">
+      {% for todo in todolist %}
+        <li class="todo-item {% if todo.is_complete %}completed{% endif %}">
+          <span class="todo-title">{{ todo.title }}</span>
+          <div class="actions">
+            {% if todo.is_complete %}
+              <a href="{% url 'update' todo.id %}" class="btn btn-complete">Mark as Incomplete</a>
+            {% else %}
+              <a href="{% url 'update' todo.id %}" class="btn btn-complete">Mark as Complete</a>
+            {% endif %}
+            <a href="{% url 'delete' todo.id %}" class="btn btn-delete">Delete</a>
+          </div>
+        </li>
+      {% empty %}
+        <p class="no-items">No items in the list.</p>
+      {% endfor %}
+    </ul>
+  </div>
+</body>
+</html>
